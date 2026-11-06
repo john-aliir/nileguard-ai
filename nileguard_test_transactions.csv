@@ -1,0 +1,13 @@
+﻿transaction_datetime,transaction_id,transaction_type,channel,region,currency,amount,hour_of_day,day_of_week,account_age_months,transactions_last_24h,failed_attempts_last_24h,new_recipient,recipient_country_mismatch,distance_from_usual_km,device_changed,balance_before,transaction_month,is_weekend
+2026-10-01 08:00:00,T001,transfer,mobile_app,Central Equatoria,SSP,1500,8,4,24,2,0,0,0,2,0,12000,10,0
+2026-10-01 09:00:00,T002,bill_payment,USSD,Jonglei,SSP,800,9,4,18,3,0,0,0,5,0,9000,10,0
+2026-10-01 10:00:00,T003,deposit,branch,Unity,SSP,5000,10,4,36,1,0,0,0,1,0,20000,10,0
+2026-10-01 11:00:00,T004,cash_withdrawal,ATM,Lakes,SSP,2000,11,4,12,2,1,0,0,3,0,7000,10,0
+2026-10-01 12:00:00,T005,mobile_banking,mobile_app,Upper Nile,SSP,3500,12,4,30,4,0,1,0,8,0,15000,10,0
+2026-10-01 13:00:00,T006,transfer,internet_banking,Western Equatoria,USD,100,13,4,48,2,0,0,0,4,0,1000,10,0
+2026-10-01 14:00:00,T007,card_payment,POS,Eastern Equatoria,SSP,1200,14,4,20,3,0,0,0,6,0,8000,10,0
+2026-10-01 15:00:00,T008,transfer,USSD,Warrap,SSP,9000,15,4,6,8,3,1,1,450,1,10000,10,0
+2026-10-01 16:00:00,T009,cash_withdrawal,ATM,Northern Bahr el Ghazal,SSP,7500,16,4,8,7,2,1,0,300,1,8500,10,0
+2026-10-01 17:00:00,T010,bill_payment,mobile_app,Western Bahr el Ghazal,SSP,600,17,4,40,1,0,0,0,2,0,5000,10,0
+2026-10-01 18:00:00,T011,transfer,internet_banking,Central Equatoria,USD,2500,18,4,2,10,4,1,1,800,1,3000,10,0
+2026-10-01 19:00:00,T012,deposit,branch,Jonglei,SSP,3000,19,4,60,2,0,0,0,1,0,18000,10,0

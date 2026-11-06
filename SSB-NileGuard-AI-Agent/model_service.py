@@ -1,163 +1,274 @@
-"""
-Model adapter for SSB-NileGuard.
-Put your trained model artifact(s) in /models and configure MODEL_PATH below.
+﻿from pathlib import Path
+import json
 
-Supported starting point: scikit-learn/XGBoost-style estimators saved with joblib
-that accept one row of tabular transaction features. If your notebook uses an LSTM,
-sequence windows, custom encoders/scalers, or a different feature order, update
-prepare_features() to match the exact preprocessing used during training.
-"""
-from pathlib import Path
-import os
+import joblib
 import numpy as np
+import pandas as pd
 
-ROOT = Path(__file__).resolve().parent
-MODEL_PATH = Path(os.getenv("NILEGUARD_MODEL_PATH", ROOT / "models" / "fraud_model.pkl"))
+# This file is inside the nested Flask folder.
+# Model artifacts and metadata are in the outer project folder.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MODEL_PATH = PROJECT_ROOT / "models" / "best_lstm.keras"
+PREPROCESSOR_PATH = PROJECT_ROOT / "models" / "preprocessor.joblib"
+METADATA_PATH = PROJECT_ROOT / "config" / "metadata.json"
+
 _model = None
+_preprocessor = None
+_metadata = None
 _load_error = None
 
-def _load_model():
-    global _model, _load_error
-    if _model is not None:
-        return _model
-    if not MODEL_PATH.exists():
-        _load_error = f"No model file found at {MODEL_PATH}"
-        return None
+
+def _load_artifacts():
+    global _model, _preprocessor, _metadata, _load_error
+
+    if _model is not None and _preprocessor is not None and _metadata is not None:
+        return True
+
     try:
-        import joblib
-        _model = joblib.load(MODEL_PATH)
+        for path in (MODEL_PATH, PREPROCESSOR_PATH, METADATA_PATH):
+            if not path.exists():
+                raise FileNotFoundError(f"Required artifact not found: {path}")
+
+        with open(METADATA_PATH, "r", encoding="utf-8") as file:
+            metadata = json.load(file)
+
+        preprocessor = joblib.load(PREPROCESSOR_PATH)
+
+        from tensorflow.keras.models import load_model
+        model = load_model(MODEL_PATH, compile=False)
+
+        expected_features = len(preprocessor.get_feature_names_out())
+        model_features = int(model.input_shape[-1])
+        sequence_length = int(metadata["sequence_length"])
+
+        if expected_features != model_features:
+            raise ValueError(
+                f"Preprocessor produces {expected_features} features, "
+                f"but the LSTM expects {model_features}."
+            )
+
+        if int(model.input_shape[1]) != sequence_length:
+            raise ValueError(
+                f"Metadata sequence length is {sequence_length}, "
+                f"but model expects {model.input_shape[1]}."
+            )
+
+        _model = model
+        _preprocessor = preprocessor
+        _metadata = metadata
         _load_error = None
+        return True
+
     except Exception as exc:
-        _load_error = str(exc)
-    return _model
+        _load_error = f"{type(exc).__name__}: {exc}"
+        _model = None
+        _preprocessor = None
+        _metadata = None
+        return False
+
 
 def get_model_status():
-    model = _load_model()
-    if model is not None:
-        return {"mode": "connected", "label": "Model artifact loaded", "detail": f"Loaded: {MODEL_PATH.name}"}
-    return {"mode": "demo", "label": "Demo mode", "detail": "No compatible trained model loaded. Predictions are illustrative, not real model outputs."}
+    if not _load_artifacts():
+        return {
+            "mode": "error",
+            "label": "Model unavailable",
+            "detail": _load_error or "Could not load the trained LSTM artifacts."
+        }
 
-def prepare_features(tx):
-    """
-    IMPORTANT: Replace this mapping with the exact feature columns and encodings
-    from your Colab notebook. Keep the same order and preprocessing used in training.
-    """
-    amount = float(tx.get("amount", 0))
-    hour = int(tx.get("hour", 12))
-    balance = float(tx.get("balance", 0))
-    device_change = int(tx.get("device_change", 0))
-    tx_type = str(tx.get("type", "POS")).upper()
-    location = str(tx.get("location", "Juba")).lower()
-
-    # Example feature mapping only. Change to match your training columns.
-    type_code = {"POS": 0, "TRANSFER": 1, "MOBILE_MONEY": 2, "WITHDRAWAL": 3}.get(tx_type, 0)
-    unknown_location = int(location in {"unknown", "unrecognized", "foreign"})
-    return np.array([[amount, hour, balance, device_change, type_code, unknown_location]], dtype=float)
-
-def _demo_prediction(tx):
-    """Clearly labelled illustrative fallback for UI demonstrations only."""
-    amount = float(tx.get("amount", 0))
-    hour = int(tx.get("hour", 12))
-    device_change = int(tx.get("device_change", 0))
-    location = str(tx.get("location", "")).lower()
-    tx_type = str(tx.get("type", "")).upper()
-
-    score = 0.04
-    reasons = []
-    if amount >= 2000:
-        score += 0.38; reasons.append("Unusually high transaction amount")
-    elif amount >= 800:
-        score += 0.19; reasons.append("Large transaction amount")
-    if hour < 5 or hour >= 23:
-        score += 0.20; reasons.append("Transaction occurred at an unusual hour")
-    if device_change:
-        score += 0.23; reasons.append("New or changed device indicator")
-    if location in {"unknown", "unrecognized", "foreign"}:
-        score += 0.20; reasons.append("Location is not recognized")
-    if tx_type in {"TRANSFER", "WITHDRAWAL"} and amount >= 800:
-        score += 0.08; reasons.append("High-value transfer or withdrawal")
-    score = min(score, 0.98)
-    label = "High risk" if score >= 0.65 else ("Review" if score >= 0.30 else "Low risk")
-    if not reasons:
-        reasons = ["No strong demo risk indicators were triggered"]
     return {
-        "risk_score": round(score * 100, 1),
-        "risk_level": label,
-        "prediction": "Potential fraud" if score >= 0.65 else ("Needs review" if score >= 0.30 else "Likely legitimate"),
-        "reasons": reasons,
-        "recommendations": recommendations(label, reasons),
-        "is_demo": True
+        "mode": "connected",
+        "label": "Trained LSTM connected",
+        "detail": (
+            f"Loaded {MODEL_PATH.name} with "
+            f"{len(_preprocessor.get_feature_names_out())} transformed features "
+            f"and a sequence length of {_metadata['sequence_length']}."
+        )
     }
 
-def recommendations(level, reasons):
+
+def recommendations(level):
     if level == "High risk":
         return [
-            "Hold for manual review before completing the transaction, where bank policy permits.",
-            "Verify the customer through an approved, independent contact channel.",
-            "Review recent account activity, device history, and beneficiary details.",
-            "Document the decision and escalate according to the bank's fraud procedure."
+            "Prioritize this transaction for authorized manual review.",
+            "Verify the customer through an approved independent channel.",
+            "Review recent account activity and transaction history.",
+            "Document the review and follow the institution's escalation procedure."
         ]
+
     if level == "Review":
         return [
-            "Request an additional verification step under the bank's policy.",
             "Compare the transaction with the customer's normal activity.",
-            "Check device, location, and recent transaction history before deciding."
+            "Check recent transaction patterns and relevant account information.",
+            "Apply additional verification according to bank policy."
         ]
+
     return [
-        "Continue standard monitoring and apply normal bank controls.",
-        "Keep an audit record and watch for repeated unusual activity."
+        "Continue normal monitoring and standard bank controls.",
+        "Retain the transaction record for audit and ongoing monitoring."
     ]
 
-def predict_transaction(tx):
-    model = _load_model()
-    if model is None:
-        return _demo_prediction(tx)
-    try:
-        features = prepare_features(tx)
-        pred = model.predict(features)[0]
-        probability = None
-        if hasattr(model, "predict_proba"):
-            probs = model.predict_proba(features)[0]
-            classes = list(getattr(model, "classes_", range(len(probs))))
-            # Try to identify the positive/fraud class, otherwise use the last class.
-            fraud_idx = next((i for i, c in enumerate(classes) if str(c).lower() in {"1", "fraud", "fraudulent", "true"}), len(probs)-1)
-            probability = float(probs[fraud_idx])
+
+def predict_csv_frame(frame):
+    if not _load_artifacts():
+        raise RuntimeError(_load_error or "The trained model could not be loaded.")
+
+    if not isinstance(frame, pd.DataFrame) or frame.empty:
+        raise ValueError("The uploaded CSV contains no transaction rows.")
+
+    feature_columns = _metadata["feature_columns_raw"]
+    missing = [column for column in feature_columns if column not in frame.columns]
+
+    if missing:
+        raise ValueError(
+            "The CSV is missing required training features: " + ", ".join(missing)
+        )
+
+    data = frame.copy()
+    original_positions = np.arange(len(data))
+
+    # Use timestamps for chronological ordering when supplied.
+    if "transaction_datetime" in data.columns:
+        timestamps = pd.to_datetime(
+            data["transaction_datetime"], errors="coerce"
+        )
+
+        if timestamps.isna().any():
+            raise ValueError(
+                "Some transaction_datetime values are invalid. "
+                "Use valid timestamps or remove this column and provide rows "
+                "already arranged in chronological order."
+            )
+
+        data["_original_position"] = original_positions
+        data["_sort_timestamp"] = timestamps
+        data = data.sort_values(
+            ["_sort_timestamp", "_original_position"],
+            kind="stable"
+        ).reset_index(drop=True)
+
+    if len(data) < int(_metadata["sequence_length"]):
+        raise ValueError(
+            f"At least {_metadata['sequence_length']} transactions are required. "
+            f"Your file contains {len(data)}."
+        )
+
+    features = data[feature_columns].copy()
+
+    # Ensure numeric columns are numeric; the saved preprocessor handles
+    # missing values according to its original training configuration.
+    for column in _metadata["numeric_columns"]:
+        features[column] = pd.to_numeric(features[column], errors="coerce")
+
+    transformed = _preprocessor.transform(features)
+
+    if hasattr(transformed, "toarray"):
+        transformed = transformed.toarray()
+
+    transformed = np.asarray(transformed, dtype=np.float32)
+
+    if transformed.ndim != 2 or not np.isfinite(transformed).all():
+        raise ValueError(
+            "Preprocessing produced invalid feature values. "
+            "Check the uploaded transaction data."
+        )
+
+    sequence_length = int(_metadata["sequence_length"])
+
+    # Each sequence contains the current transaction and its preceding
+    # sequence_length - 1 rows, matching the training window length.
+    sequences = np.stack([
+        transformed[end - sequence_length + 1:end + 1]
+        for end in range(sequence_length - 1, len(transformed))
+    ]).astype(np.float32)
+
+    probabilities = _model.predict(sequences, verbose=0).reshape(-1)
+
+    threshold = float(_metadata["decision_threshold_selected_on_validation"])
+    results = []
+
+    for index, probability in enumerate(probabilities):
+        probability = float(np.clip(probability, 0.0, 1.0))
+        is_alert = probability >= threshold
+
+        if probability >= 0.65:
+            level = "High risk"
+        elif is_alert:
+            level = "Review"
         else:
-            probability = 1.0 if str(pred).lower() in {"1", "fraud", "fraudulent", "true"} else 0.0
-        level = "High risk" if probability >= 0.65 else ("Review" if probability >= 0.30 else "Low risk")
-        reasons = ["Model output should be reviewed alongside bank rules and transaction history."]
-        return {
-            "risk_score": round(probability * 100, 1),
+            level = "Low risk"
+
+        row = data.iloc[index + sequence_length - 1]
+
+        transaction_id = row.get("transaction_id", None)
+        if pd.isna(transaction_id) if transaction_id is not None else True:
+            transaction_id = f"CSV-ROW-{index + sequence_length}"
+
+        amount = row.get("amount", None)
+        currency = row.get("currency", None)
+        tx_type = row.get("transaction_type", None)
+        region = row.get("region", None)
+
+        results.append({
+            "id": str(transaction_id),
+            "transaction_id": str(transaction_id),
+            "amount": float(amount) if pd.notna(amount) else None,
+            "currency": str(currency) if pd.notna(currency) else None,
+            "type": str(tx_type) if pd.notna(tx_type) else None,
+            "location": str(region) if pd.notna(region) else None,
+            "risk_score": round(probability * 100, 2),
             "risk_level": level,
-            "prediction": "Potential fraud" if level == "High risk" else ("Needs review" if level == "Review" else "Likely legitimate"),
-            "reasons": reasons,
-            "recommendations": recommendations(level, reasons),
+            "prediction": "Potential fraud alert" if is_alert else "No fraud alert",
+            "predicted_fraud": bool(is_alert),
+            "decision_threshold": threshold,
+            "reasons": [
+                "LSTM sequence risk score generated from the current transaction "
+                "and its preceding transaction history."
+            ],
+            "recommendations": recommendations(level),
             "is_demo": False
-        }
-    except Exception as exc:
-        return {"error": f"Model prediction failed: {exc}", "risk_score": 0, "risk_level": "Unavailable",
-                "prediction": "Could not score", "reasons": ["Check model input columns and preprocessing."],
-                "recommendations": ["Update prepare_features() to match the training notebook."], "is_demo": False}
+        })
+
+    return results
+
 
 def explain_question(question, context=None):
     q = question.lower()
     context = context or {}
-    score = context.get("risk_score")
-    level = context.get("risk_level")
-    if any(w in q for w in ["why", "reason", "explain"]):
-        if level:
-            reasons = context.get("reasons") or []
-            return f"This transaction is marked **{level}** with a displayed risk score of {score}%. Indicators: " + "; ".join(reasons) + ". Treat this as a decision-support signal, not proof of fraud."
-        return "A fraud score is an estimate based on patterns learned from transaction data. Review amount, transaction type, time, location, device changes, and the customer's normal history. Select a transaction or run a test to get a more specific explanation."
-    if any(w in q for w in ["recommend", "what should", "next step", "action"]):
-        if level == "High risk":
-            return "Recommended: pause for review where permitted, verify the customer through an approved independent channel, inspect recent account/device activity, and follow the bank's escalation policy."
-        return "Recommended: compare with the customer's usual activity, verify unusual details using bank-approved controls, and document the review. Do not block a customer based only on this demo."
-    if any(w in q for w in ["model", "lstm", "ai", "trained"]):
+
+    if any(word in q for word in ["why", "reason", "explain"]):
+        if context.get("risk_level"):
+            return (
+                f"The LSTM assigned this transaction a {context['risk_level']} "
+                f"classification with a score of {context.get('risk_score')}%. "
+                "This score is based on a 10-transaction sequence. It is a "
+                "screening signal, not proof of fraud. A human reviewer should "
+                "examine the underlying transaction history."
+            )
+
+        return (
+            "NileGuard evaluates a chronological window of 10 transactions. "
+            "The model produces a risk score from patterns in the sequence. "
+            "Upload a suitable CSV to obtain an assessment."
+        )
+
+    if any(word in q for word in ["recommend", "next step", "what should", "action"]):
+        level = context.get("risk_level", "")
+        return " ".join(recommendations(level))
+
+    if any(word in q for word in ["model", "lstm", "trained", "connected"]):
         status = get_model_status()
-        if status["mode"] == "demo":
-            return "The interface is running in DEMO MODE; its sample risk scores come from illustrative rules, not your trained Colab model. To use your actual model, export the model and required preprocessing artifacts, place them in the models folder, and align prepare_features() with the notebook's exact input columns. LSTM models also require the same sequence window shape used during training."
-        return "A model artifact is loaded. Confirm that the feature mapping and preprocessing match the training notebook before interpreting results. This agent supports fraud review; it does not replace bank controls or investigator judgement."
-    if any(w in q for w in ["false positive", "mistake", "accuracy"]):
-        return "A false positive is a legitimate transaction flagged for review. Evaluate precision, recall, the confusion matrix, and the cost of missed fraud versus unnecessary reviews. Do not rely on accuracy alone, especially when fraud cases are rare."
-    return "I can explain risk scores, common fraud indicators, review recommendations, model integration, and evaluation metrics. Try asking: “Why was this transaction flagged?”, “What should the reviewer do next?”, or “Is the trained model connected?”"
+        return f"{status['label']}. {status['detail']}"
+
+    if any(word in q for word in ["false positive", "accuracy", "precision", "recall"]):
+        return (
+            "A false positive occurs when a legitimate transaction receives a "
+            "fraud alert. Accuracy alone is not enough to evaluate fraud models. "
+            "Precision, recall, the confusion matrix, and the cost of missed "
+            "fraud must also be considered."
+        )
+
+    return (
+        "I can explain LSTM risk scores, transaction sequences, model evaluation, "
+        "false positives, and recommended review procedures. Ask me about any "
+        "of these topics."
+    )

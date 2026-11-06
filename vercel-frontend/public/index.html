@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -12,15 +12,15 @@
     <div class="brand">
       <div class="brand-mark">N</div>
       <div><strong>SSB-NileGuard</strong><span>AI FRAUD AGENT</span></div>
-      <button class="mobile-close" id="closeSidebar" aria-label="Close menu">×</button>
+      <button class="mobile-close" id="closeSidebar" aria-label="Close menu">Ã—</button>
     </div>
     <div class="workspace-label">WORKSPACE</div>
     <nav class="nav">
-      <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
-      <button class="nav-item" data-view="transactions"><span>⇄</span> Transactions <b class="nav-count">06</b></button>
-      <button class="nav-item" data-view="alerts"><span>⚑</span> Alert reviews <b class="nav-count alert-count">03</b></button>
-      <button class="nav-item" data-view="analyze"><span>⌕</span> Analyze transaction</button>
-      <button class="nav-item" data-view="assistant"><span>✧</span> AI assistant</button>
+      <button class="nav-item active" data-view="overview"><span>â–¦</span> Overview</button>
+      <button class="nav-item" data-view="transactions"><span>â‡„</span> Transactions <b class="nav-count">06</b></button>
+      <button class="nav-item" data-view="alerts"><span>âš‘</span> Alert reviews <b class="nav-count alert-count">03</b></button>
+      <button class="nav-item" data-view="analyze"><span>âŒ•</span> Analyze transaction</button>
+      <button class="nav-item" data-view="assistant"><span>âœ§</span> AI assistant</button>
     </nav>
     <div class="sidebar-bottom">
       <div class="status-card">
@@ -28,47 +28,47 @@
         <strong id="sidebarModelLabel">Demo Mode</strong>
         <p id="sidebarModelDetail">Waiting for backend connection</p>
       </div>
-      <div class="user-profile"><div class="avatar">NG</div><div><strong>Fraud Review Team</strong><small>Local demo workspace</small></div><span class="dots">•••</span></div>
+      <div class="user-profile"><div class="avatar">NG</div><div><strong>Fraud Review Team</strong><small>Local demo workspace</small></div><span class="dots">â€¢â€¢â€¢</span></div>
     </div>
   </aside>
 
   <main class="main">
     <header class="topbar">
-      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">â˜°</button>
       <div class="crumb">Workspace <span>/</span> <strong id="pageCrumb">Overview</strong></div>
-      <div class="top-actions"><span class="secure-pill"><i></i> Local environment</span><button class="icon-button" id="topAlerts" title="Open alerts">♧<em></em></button><div class="top-avatar">NG</div></div>
+      <div class="top-actions"><span class="secure-pill"><i></i> Local environment</span><button class="icon-button" id="topAlerts" title="Open alerts">â™§<em></em></button><div class="top-avatar">NG</div></div>
     </header>
 
     <section class="view active-view" id="view-overview">
       <div class="page-heading">
-        <div><div class="eyebrow">SOUTH SUDAN · TRANSACTION INTELLIGENCE</div><h1>Fraud monitoring overview</h1><p>Review transaction signals, understand risk, and decide what needs a closer look.</p></div>
-        <button class="primary-btn" data-goto="analyze">＋ Analyze transaction</button>
+        <div><div class="eyebrow">SOUTH SUDAN Â· TRANSACTION INTELLIGENCE</div><h1>Fraud monitoring overview</h1><p>Review transaction signals, understand risk, and decide what needs a closer look.</p></div>
+        <button class="primary-btn" data-goto="analyze">ï¼‹ Analyze transaction</button>
       </div>
-      <div class="demo-banner" id="demoBanner"><span class="banner-icon">ⓘ</span><div><strong>Demonstration workspace</strong><p>Sample transactions and illustrative risk scores are shown. Connect your trained model to enable real model inference.</p></div><button id="dismissBanner" aria-label="Dismiss">×</button></div>
+      <div class="demo-banner" id="demoBanner"><span class="banner-icon">â“˜</span><div><strong>Demonstration workspace</strong><p>Sample transactions and illustrative risk scores are shown. Connect your trained model to enable real model inference.</p></div><button id="dismissBanner" aria-label="Dismiss">Ã—</button></div>
       <div class="metric-grid">
-        <article class="metric-card"><div class="metric-top"><span>Transactions reviewed</span><span class="metric-icon blue">⇄</span></div><strong id="metricTotal">06</strong><div class="metric-foot"><span class="positive">●</span> Sample transaction feed</div></article>
-        <article class="metric-card"><div class="metric-top"><span>High-risk alerts</span><span class="metric-icon red">⚑</span></div><strong id="metricHigh">—</strong><div class="metric-foot">Require prompt human review</div></article>
-        <article class="metric-card"><div class="metric-top"><span>Needs review</span><span class="metric-icon amber">◷</span></div><strong id="metricReview">—</strong><div class="metric-foot">Additional checks recommended</div></article>
-        <article class="metric-card"><div class="metric-top"><span>Model connection</span><span class="metric-icon green">✧</span></div><strong class="metric-status" id="metricModel">Demo</strong><div class="metric-foot" id="metricModelFoot">Illustrative rules active</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Transactions reviewed</span><span class="metric-icon blue">â‡„</span></div><strong id="metricTotal">06</strong><div class="metric-foot"><span class="positive">â—</span> Sample transaction feed</div></article>
+        <article class="metric-card"><div class="metric-top"><span>High-risk alerts</span><span class="metric-icon red">âš‘</span></div><strong id="metricHigh">â€”</strong><div class="metric-foot">Require prompt human review</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Needs review</span><span class="metric-icon amber">â—·</span></div><strong id="metricReview">â€”</strong><div class="metric-foot">Additional checks recommended</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Model connection</span><span class="metric-icon green">âœ§</span></div><strong class="metric-status" id="metricModel">Demo</strong><div class="metric-foot" id="metricModelFoot">Illustrative rules active</div></article>
       </div>
       <div class="content-grid">
         <section class="panel transactions-panel">
-          <div class="panel-heading"><div><h2>Recent transactions</h2><p>Latest sample activity and risk assessments</p></div><button class="text-btn" data-goto="transactions">View all <span>→</span></button></div>
-          <div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>TYPE</th><th>AMOUNT</th><th>RISK</th><th>STATUS</th></tr></thead><tbody id="transactionRows"><tr><td colspan="5">Loading transactions…</td></tr></tbody></table></div>
+          <div class="panel-heading"><div><h2>Recent transactions</h2><p>Latest sample activity and risk assessments</p></div><button class="text-btn" data-goto="transactions">View all <span>â†’</span></button></div>
+          <div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>TYPE</th><th>AMOUNT</th><th>RISK</th><th>STATUS</th></tr></thead><tbody id="transactionRows"><tr><td colspan="5">Loading transactionsâ€¦</td></tr></tbody></table></div>
           <div class="panel-foot"><span id="transactionFoot">Showing sample records</span><span class="live-dot"></span> Updated for this session</div>
         </section>
         <section class="panel alerts-panel">
           <div class="panel-heading"><div><h2>Alert review queue</h2><p>Signals that may need investigation</p></div><span class="count-chip" id="alertQueueCount">03</span></div>
           <div id="alertList" class="alert-list"></div>
-          <button class="secondary-btn full-btn" data-goto="alerts">Open alert reviews <span>→</span></button>
+          <button class="secondary-btn full-btn" data-goto="alerts">Open alert reviews <span>â†’</span></button>
         </section>
       </div>
-      <section class="panel insight-panel"><div class="insight-symbol">✧</div><div><h2>Need help understanding a transaction?</h2><p>Ask the NileGuard assistant to explain a risk score, outline possible indicators, or suggest a review checklist.</p></div><button class="secondary-btn" data-goto="assistant">Ask AI assistant <span>→</span></button></section>
+      <section class="panel insight-panel"><div class="insight-symbol">âœ§</div><div><h2>Need help understanding a transaction?</h2><p>Ask the NileGuard assistant to explain a risk score, outline possible indicators, or suggest a review checklist.</p></div><button class="secondary-btn" data-goto="assistant">Ask AI assistant <span>â†’</span></button></section>
     </section>
 
     <section class="view" id="view-transactions">
-      <div class="page-heading"><div><div class="eyebrow">ACTIVITY FEED</div><h1>Transactions</h1><p>Explore the sample transaction records and their current risk signals.</p></div><button class="primary-btn" data-goto="analyze">＋ New analysis</button></div>
-      <section class="panel"><div class="panel-heading"><div><h2>Transaction register</h2><p>Choose a row to send its values to the analysis form.</p></div><input id="transactionSearch" class="search-input" placeholder="Search ID or type…"></div><div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>ACCOUNT</th><th>TYPE</th><th>AMOUNT</th><th>LOCATION</th><th>RISK</th><th></th></tr></thead><tbody id="allTransactionRows"></tbody></table></div></section>
+      <div class="page-heading"><div><div class="eyebrow">ACTIVITY FEED</div><h1>Transactions</h1><p>Explore the sample transaction records and their current risk signals.</p></div><button class="primary-btn" data-goto="analyze">ï¼‹ New analysis</button></div>
+      <section class="panel"><div class="panel-heading"><div><h2>Transaction register</h2><p>Choose a row to send its values to the analysis form.</p></div><input id="transactionSearch" class="search-input" placeholder="Search ID or typeâ€¦"></div><div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>ACCOUNT</th><th>TYPE</th><th>AMOUNT</th><th>LOCATION</th><th>RISK</th><th></th></tr></thead><tbody id="allTransactionRows"></tbody></table></div></section>
     </section>
 
     <section class="view" id="view-alerts">
@@ -77,24 +77,37 @@
     </section>
 
     <section class="view" id="view-analyze">
-      <div class="page-heading"><div><div class="eyebrow">RISK ASSESSMENT</div><h1>Analyze a transaction</h1><p>Enter transaction details to request a risk assessment from the backend.</p></div><span class="soft-tag">Decision support only</span></div>
+      <div class="page-heading"><div><div class="eyebrow">RISK ASSESSMENT</div><h1>Analyze transaction history</h1><p>Upload transaction history to generate assessments using the trained LSTM model.</p></div><span class="soft-tag">Decision support only</span></div>
       <div class="analysis-layout">
-        <section class="panel form-panel"><div class="panel-heading"><div><h2>Transaction details</h2><p>Use synthetic data for demonstrations.</p></div><span class="step-chip">01 / INPUT</span></div>
+        <section class="panel form-panel"><div class="panel-heading"><div><h2>Transaction history CSV</h2><p>Use synthetic data for demonstrations.</p></div><span class="step-chip">01 / INPUT</span></div>
           <form id="analyzeForm">
-            <div class="field-grid">
-              <label>Transaction amount <span>*</span><div class="input-wrap"><span>$</span><input type="number" min="0" step="0.01" name="amount" value="2850" required></div></label>
-              <label>Account balance <span>*</span><div class="input-wrap"><span>$</span><input type="number" min="0" step="0.01" name="balance" value="3100" required></div></label>
-              <label>Transaction type <span>*</span><select name="type" required><option>TRANSFER</option><option>POS</option><option>MOBILE_MONEY</option><option>WITHDRAWAL</option></select></label>
-              <label>Transaction hour (0–23) <span>*</span><input type="number" name="hour" min="0" max="23" value="2" required></label>
-              <label>Location <span>*</span><select name="location" required><option>Juba</option><option>Wau</option><option>Malakal</option><option>Unknown</option><option>Unrecognized</option></select></label>
-              <label>New / changed device <span>*</span><select name="device_change"><option value="0">No</option><option value="1" selected>Yes</option></select></label>
-            </div>
-            <div class="form-note"><span>ⓘ</span> The feature mapping must match your model's training columns before using real model predictions.</div>
-            <div class="form-actions"><button type="reset" class="secondary-btn">Reset form</button><button type="submit" class="primary-btn" id="analyzeButton">Run risk analysis <span>→</span></button></div>
-          </form>
+  <div class="field-grid">
+    <label style="grid-column:1 / -1;">
+      Upload transaction history CSV <span>*</span>
+      <input
+        type="file"
+        id="csvFile"
+        name="file"
+        accept=".csv,text/csv"
+        required
+      >
+    </label>
+  </div>
+
+  <div class="form-note">
+    Upload a chronological CSV with these 17 columns: transaction_type, channel, region, currency, amount, hour_of_day, day_of_week, account_age_months, transactions_last_24h, failed_attempts_last_24h, new_recipient, recipient_country_mismatch, distance_from_usual_km, device_changed, balance_before, transaction_month, is_weekend. At least 10 rows are required. Each prediction evaluates a 10-transaction window. Optional columns: transaction_datetime and transaction_id.
+  </div>
+
+  <div class="form-actions">
+    <button type="reset" class="secondary-btn">Reset</button>
+    <button type="submit" class="primary-btn" id="analyzeButton">
+      Analyze transaction history
+    </button>
+  </div>
+</form>
         </section>
         <section class="panel result-panel"><div class="panel-heading"><div><h2>Assessment result</h2><p>Risk signals and next-step guidance</p></div><span class="step-chip">02 / RESULT</span></div>
-          <div id="emptyResult" class="empty-result"><div class="empty-icon">⌁</div><h3>Waiting for transaction</h3><p>Complete the form and run analysis to see the risk score, indicators, and recommendations here.</p></div>
+          <div id="emptyResult" class="empty-result"><div class="empty-icon">âŒ</div><h3>Waiting for transaction history</h3><p>Upload a chronological transaction CSV to generate LSTM risk assessments.</p></div>
           <div id="analysisResult" class="hidden"></div>
         </section>
       </div>
@@ -103,18 +116,20 @@
     <section class="view" id="view-assistant">
       <div class="page-heading"><div><div class="eyebrow">EXPLAINABLE FRAUD SUPPORT</div><h1>NileGuard AI assistant</h1><p>Ask clear questions about fraud signals, model behavior, or recommended review steps.</p></div><span class="soft-tag">Plain-language help</span></div>
       <div class="chat-layout">
-        <section class="panel chat-panel"><div class="chat-header"><div class="assistant-avatar">✧</div><div><h2>NileGuard assistant</h2><p><span class="live-dot"></span> Ready to help explain</p></div><span class="chat-label">GUIDED ASSISTANT</span></div>
-          <div id="chatMessages" class="chat-messages"><div class="message assistant-message"><div class="message-avatar">✧</div><div class="bubble"><strong>Hello, I'm NileGuard.</strong><p>I can help explain transaction risk indicators, suggest a review checklist, and clarify how the model connects to this dashboard. What would you like to understand?</p></div></div></div>
+        <section class="panel chat-panel"><div class="chat-header"><div class="assistant-avatar">âœ§</div><div><h2>NileGuard assistant</h2><p><span class="live-dot"></span> Ready to help explain</p></div><span class="chat-label">GUIDED ASSISTANT</span></div>
+          <div id="chatMessages" class="chat-messages"><div class="message assistant-message"><div class="message-avatar">âœ§</div><div class="bubble"><strong>Hello, I'm NileGuard.</strong><p>I can help explain transaction risk indicators, suggest a review checklist, and clarify how the model connects to this dashboard. What would you like to understand?</p></div></div></div>
           <div class="suggestion-row"><button class="suggestion" data-question="Why was this transaction flagged?">Why was it flagged?</button><button class="suggestion" data-question="What should the reviewer do next?">Recommended next steps</button><button class="suggestion" data-question="Is my trained model connected?">Is my model connected?</button></div>
-          <form id="chatForm" class="chat-compose"><input id="chatInput" autocomplete="off" placeholder="Ask about a transaction or fraud signal…" required><button class="send-btn" aria-label="Send message">↑</button></form><div class="chat-disclaimer">AI explanations are decision support, not proof of fraud. Follow your bank's procedures.</div>
+          <form id="chatForm" class="chat-compose"><input id="chatInput" autocomplete="off" placeholder="Ask about a transaction or fraud signalâ€¦" required><button class="send-btn" aria-label="Send message">â†‘</button></form><div class="chat-disclaimer">AI explanations are decision support, not proof of fraud. Follow your bank's procedures.</div>
         </section>
-        <aside class="panel chat-side"><h2>What I can help with</h2><div class="help-item"><span>01</span><div><strong>Explain risk signals</strong><p>Understand why an amount, location, or device change may deserve attention.</p></div></div><div class="help-item"><span>02</span><div><strong>Review recommendations</strong><p>Get a structured checklist for further verification and escalation.</p></div></div><div class="help-item"><span>03</span><div><strong>Understand model quality</strong><p>Learn about false positives, recall, precision, and confusion matrices.</p></div></div><div class="chat-tip"><strong>Try asking</strong><p>“What is a false positive in bank fraud detection?”</p></div></aside>
+        <aside class="panel chat-side"><h2>What I can help with</h2><div class="help-item"><span>01</span><div><strong>Explain risk signals</strong><p>Understand why an amount, location, or device change may deserve attention.</p></div></div><div class="help-item"><span>02</span><div><strong>Review recommendations</strong><p>Get a structured checklist for further verification and escalation.</p></div></div><div class="help-item"><span>03</span><div><strong>Understand model quality</strong><p>Learn about false positives, recall, precision, and confusion matrices.</p></div></div><div class="chat-tip"><strong>Try asking</strong><p>â€œWhat is a false positive in bank fraud detection?â€</p></div></aside>
       </div>
     </section>
-    <footer class="footer"><span>SSB-NileGuard AI Agent <span class="footer-sep">·</span> Student demonstration prototype</span><span>Protect data <b>•</b> Review responsibly</span></footer>
+    <footer class="footer"><span>SSB-NileGuard AI Agent <span class="footer-sep">Â·</span> Student demonstration prototype</span><span>Protect data <b>â€¢</b> Review responsibly</span></footer>
   </main>
 </div>
 <div class="toast" id="toast"></div>
 <script src="/app.js"></script>
 </body>
 </html>
+
+
