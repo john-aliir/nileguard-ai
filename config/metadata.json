@@ -1,0 +1,90 @@
+{
+  "project": "SSB-NileGuard AI",
+  "model_type": "LSTM deep learning binary classifier",
+  "target": "is_fraud",
+  "target_definition": {
+    "0": "legitimate",
+    "1": "fraud-labelled/potential fraud"
+  },
+  "source_file": "SSB_NileGuard_Synthetic_Transactions_20000.csv",
+  "dataset_rows_after_target_cleaning": 20000,
+  "feature_columns_raw": [
+    "transaction_type",
+    "channel",
+    "region",
+    "currency",
+    "amount",
+    "hour_of_day",
+    "day_of_week",
+    "account_age_months",
+    "transactions_last_24h",
+    "failed_attempts_last_24h",
+    "new_recipient",
+    "recipient_country_mismatch",
+    "distance_from_usual_km",
+    "device_changed",
+    "balance_before",
+    "transaction_month",
+    "is_weekend"
+  ],
+  "categorical_columns": [
+    "transaction_type",
+    "channel",
+    "region",
+    "currency"
+  ],
+  "numeric_columns": [
+    "amount",
+    "hour_of_day",
+    "day_of_week",
+    "account_age_months",
+    "transactions_last_24h",
+    "failed_attempts_last_24h",
+    "new_recipient",
+    "recipient_country_mismatch",
+    "distance_from_usual_km",
+    "device_changed",
+    "balance_before",
+    "transaction_month",
+    "is_weekend"
+  ],
+  "excluded_columns": [
+    "fraud_label",
+    "is_fraud",
+    "transaction_datetime",
+    "transaction_id"
+  ],
+  "sequence_length": 10,
+  "sequence_group_column": null,
+  "split_method": "chronological 70/15/15",
+  "decision_threshold_selected_on_validation": 0.14,
+  "class_weight": {
+    "0": 0.5095789627039627,
+    "1": 26.598859315589355
+  },
+  "limitations": [
+    "Synthetic or research data results are not evidence of real-bank performance.",
+    "If no account/customer identifier is available, sequences are global chronological windows rather than per-account histories.",
+    "Human review is required; the prototype should not automatically block payments or accuse customers.",
+    "Performance depends on label quality, representativeness and the train/validation/test split."
+  ],
+  "test_metrics": {
+    "decision_threshold": 0.14,
+    "test_sequences": 2991.0,
+    "actual_fraud_count": 47.0,
+    "predicted_alert_count": 181.0,
+    "accuracy": 0.9271146773654296,
+    "balanced_accuracy": 0.523300185013876,
+    "fraud_precision": 0.027624309392265192,
+    "fraud_recall": 0.10638297872340426,
+    "fraud_f1": 0.043859649122807015,
+    "fraud_f2": 0.06775067750677506,
+    "specificity": 0.9402173913043478,
+    "roc_auc": 0.5618784690101757,
+    "pr_auc_average_precision": 0.02838855377241313,
+    "true_negative": 2768.0,
+    "false_positive": 176.0,
+    "false_negative": 42.0,
+    "true_positive": 5.0
+  }
+}

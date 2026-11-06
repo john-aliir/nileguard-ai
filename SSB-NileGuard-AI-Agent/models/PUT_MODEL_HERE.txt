@@ -1,0 +1,1 @@
+Place your exported compatible model artifact here as fraud_model.pkl. Read README.md first. Do not rename an LSTM file to .pkl; update the model loader for its format.
