@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SSB-NileGuard AI Agent</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div class="app-shell">
@@ -25,8 +25,8 @@
     <div class="sidebar-bottom">
       <div class="status-card">
         <div class="status-head"><span class="pulse"></span> MODEL STATUS</div>
-        <strong id="sidebarModelLabel">{{ model_status.label }}</strong>
-        <p id="sidebarModelDetail">{{ model_status.detail }}</p>
+        <strong id="sidebarModelLabel">Demo Mode</strong>
+        <p id="sidebarModelDetail">Waiting for backend connection</p>
       </div>
       <div class="user-profile"><div class="avatar">NG</div><div><strong>Fraud Review Team</strong><small>Local demo workspace</small></div><span class="dots">•••</span></div>
     </div>
@@ -115,6 +115,6 @@
   </main>
 </div>
 <div class="toast" id="toast"></div>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="/app.js"></script>
 </body>
 </html>
